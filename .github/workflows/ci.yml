@@ -72,7 +72,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-      - run: sudo apt-get update && sudo apt-get install -y dpkg-dev debhelper
+      - run: sudo apt-get update && sudo apt-get install -y build-essential dpkg-dev debhelper
       - run: packaging/build-deb.sh
       - uses: actions/upload-artifact@v4
         with:

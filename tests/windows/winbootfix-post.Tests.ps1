@@ -26,7 +26,7 @@ Describe 'Translations' {
     }
     It 'every key used by the scripts exists in en.json' {
         $en = Get-Content (Join-Path $script:Root 'locales/en.json') -Raw | ConvertFrom-Json
-        $used = Select-String -Path (Join-Path $repo 'windows/*.ps1'), (Join-Path $repo 'windows/winpe/*.ps1') -Pattern "T '([a-z0-9_.]+)'" -AllMatches |
+        $used = Select-String -Path (Join-Path $repo 'windows/*.ps1'), (Join-Path $repo 'windows/winpe/*.ps1') -Pattern "\bT '([a-z0-9_.]+)'" -CaseSensitive -AllMatches |
             ForEach-Object { $_.Matches } | ForEach-Object { $_.Groups[1].Value } | Sort-Object -Unique
         foreach ($k in $used) { $en.PSObject.Properties.Name | Should -Contain $k }
     }

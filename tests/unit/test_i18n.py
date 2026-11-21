@@ -9,7 +9,7 @@ LOCALES = ROOT / "locales"
 PY_KEY = re.compile(r"[\"']((?:finding|advice|action|error|question|report|step|results|final|engine|ui|cli|"
                     r"argparse|menu|backup|target|restore|detect|severity|status|secureboot|bios|post|winpe)"
                     r"\.[a-z0-9_.]+)[\"']")
-PS_KEY = re.compile(r"T '([a-z0-9_.]+)'")
+PS_KEY = re.compile(r"\bT '([a-z0-9_.]+)'")
 DYNAMIC = ["severity.info", "severity.warning", "severity.error", "severity.critical",
            "status.planned", "status.applied", "status.failed", "status.skipped", "status.cancelled",
            "target.local", "target.boot_usb", "target.usb", "target.windows",

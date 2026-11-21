@@ -19,7 +19,7 @@ jobs:
       - name: Tests
         run: |
           sudo apt-get update
-          sudo apt-get install -y python3-hivex python3-pytest dpkg-dev debhelper qemu-system-x86 ovmf socat
+          sudo apt-get install -y python3-hivex python3-pytest build-essential dpkg-dev debhelper qemu-system-x86 ovmf socat
           /usr/bin/python3 -m pytest -q tests/unit
       - name: Source archive
         run: |
