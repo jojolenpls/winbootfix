@@ -1,0 +1,38 @@
+name: Case not covered / Cas non couvert
+description: winbootfix did not fix your PC? Share the report. / winbootfix n'a pas réparé votre PC ? Partagez le rapport.
+labels: ["case-report"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you! The report is anonymised (user names, serial numbers, BitLocker keys are removed).
+        Merci ! Le rapport est anonymisé (noms d'utilisateur, numéros de série, clés BitLocker retirés).
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened? / Que s'est-il passé ?
+      description: What was wrong before, what did you do, what is wrong now. / Le problème, ce que vous avez fait, le résultat.
+    validations:
+      required: true
+  - type: input
+    id: pc
+    attributes:
+      label: PC model / Modèle du PC
+      placeholder: e.g. Lenovo IdeaPad 5 14ALC05, ASUS ROG STRIX B550-F
+  - type: dropdown
+    id: how
+    attributes:
+      label: How did you run winbootfix? / Comment avez-vous lancé winbootfix ?
+      options:
+        - USB stick (ISO) / Clé USB (ISO)
+        - Installed on Linux / Installé sous Linux
+        - Windows script (winbootfix-post.ps1)
+        - WinPE
+  - type: textarea
+    id: report
+    attributes:
+      label: Report / Rapport
+      description: Paste winbootfix-report-*.txt here (or attach the .txt / .json file). / Collez winbootfix-report-*.txt ici (ou joignez le fichier).
+      render: text
+    validations:
+      required: true

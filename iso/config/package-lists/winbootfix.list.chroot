@@ -1,0 +1,21 @@
+# winbootfix runtime
+python3
+python3-hivex
+efibootmgr
+ntfs-3g
+dosfstools
+exfatprogs
+dislocker
+whiptail
+# console: keyboard layouts (AZERTY...) and a font with accents
+console-setup
+keyboard-configuration
+kbd
+# small rescue toolbox for the shell
+less
+nano
+fdisk
+gdisk
+pciutils
+usbutils
+mokutil

@@ -1,0 +1,5 @@
+{
+  "_comment": "File names (lowercase) that must never be reported as wrong architecture, even if their PE header says so. .NET AnyCPU assemblies and resource-only DLLs are already handled automatically. Only add a name here with a proof (link, screenshot) in the pull request.",
+  "system32": [],
+  "syswow64": []
+}

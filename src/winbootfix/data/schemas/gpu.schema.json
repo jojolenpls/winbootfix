@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "winbootfix graphics vendors",
+  "type": "object",
+  "required": ["vendors", "services", "oem_support", "ddu_page"],
+  "properties": {
+    "_comment": {"type": "string"},
+    "vendors": {
+      "type": "object",
+      "patternProperties": {
+        "^[0-9a-f]{4}$": {
+          "type": "object",
+          "required": ["name", "driver_page", "signer", "clean_install_hint"],
+          "properties": {
+            "name": {"type": "string"},
+            "driver_page": {"type": "string"},
+            "installer_url": {"type": ["string", "null"]},
+            "signer": {"type": "string"},
+            "clean_install_hint": {"type": "string"}
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "services": {
+      "type": "object",
+      "patternProperties": {
+        "^[a-z0-9_]+$": {
+          "type": "object",
+          "required": ["vendor", "start"],
+          "properties": {"vendor": {"type": "string"}, "start": {"type": "integer", "enum": [0, 1, 2, 3]}},
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "oem_support": {"type": "object", "patternProperties": {"^[a-z]+$": {"type": "string"}}, "additionalProperties": false},
+    "ddu_page": {"type": "string"}
+  },
+  "additionalProperties": false
+}

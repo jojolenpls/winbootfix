@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+*.egg-info/
+build/
+dist/
+iso/build/
+.pytest_cache/
+.ruff_cache/
+*.iso
+*.qcow2

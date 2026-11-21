@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "winbootfix languages and keyboards",
+  "type": "object",
+  "required": ["lcid", "keymap", "keyboard"],
+  "properties": {
+    "_comment": {"type": "string"},
+    "lcid": {"type": "object", "patternProperties": {"^[0-9a-f]{4}$": {"type": "string"}}, "additionalProperties": false},
+    "keymap": {"type": "object", "patternProperties": {"^[a-z]{2}(-[A-Z]{2})?$": {"type": "string"}}, "additionalProperties": false},
+    "keyboard": {"type": "object", "patternProperties": {"^[0-9a-f]{4}$": {"type": "string"}}, "additionalProperties": false}
+  },
+  "additionalProperties": false
+}

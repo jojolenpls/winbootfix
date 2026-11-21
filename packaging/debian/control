@@ -1,0 +1,23 @@
+Source: winbootfix
+Section: admin
+Priority: optional
+Maintainer: winbootfix contributors <noreply@users.noreply.github.com>
+Build-Depends: debhelper-compat (= 13)
+Standards-Version: 4.7.0
+Homepage: https://github.com/jojolenpls/winbootfix
+Rules-Requires-Root: no
+
+Package: winbootfix
+Architecture: all
+Depends: ${misc:Depends}, python3 (>= 3.9), python3-hivex, efibootmgr, ntfs-3g, util-linux, dosfstools
+Recommends: whiptail, console-setup
+Suggests: dislocker, exfatprogs
+Description: repair Windows boot entry and Windows health from Linux
+ winbootfix repairs two common Windows problems from a Linux system:
+  - the "Windows Boot Manager" UEFI entry disappeared and the PC no longer
+    starts Windows (NVRAM entry, EFI boot files, BCD store);
+  - Windows starts but works badly: graphics driver not loaded, DLL files of
+    the wrong architecture or damaged, damaged system files.
+ .
+ It only diagnoses by default, backs everything up before any change and
+ schedules a post-repair script that runs at the next Windows sign-in.

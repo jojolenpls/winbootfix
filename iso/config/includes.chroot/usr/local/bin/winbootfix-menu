@@ -1,0 +1,21 @@
+#!/bin/sh
+# Started by winbootfix-menu.service on tty1 of the live ISO.
+export TERM=linux LANG=C.UTF-8
+setupcon --force >/dev/null 2>&1 || true
+
+# Automated tests only (tests/vm, tests/iso): run a base64 shell script given on the
+# kernel command line, print its output on the serial console, then power off.
+if grep -qw 'winbootfix.test=1' /proc/cmdline; then
+    script=$(sed -n 's/.*winbootfix\.autorun=\([^ ]*\).*/\1/p' /proc/cmdline)
+    if [ -n "$script" ]; then
+        echo "$script" | base64 -d > /run/winbootfix-autorun.sh
+        sh /run/winbootfix-autorun.sh > /dev/ttyS0 2>&1
+        echo "WINBOOTFIX-AUTORUN-EXIT=$?" > /dev/ttyS0
+        systemctl poweroff
+        exit 0
+    fi
+fi
+
+# Marker for the automated boot test (tests/iso/boot_smoke.sh)
+echo "WINBOOTFIX-MENU-READY" > /dev/ttyS0 2>/dev/null || true
+exec /usr/bin/winbootfix menu

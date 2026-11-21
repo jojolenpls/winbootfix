@@ -1,0 +1,11 @@
+#!/usr/bin/python3 -I
+"""winbootfix launcher (installed by `make install`)."""
+import os
+import sys
+
+sys.path.insert(0, "@LIBDIR@")
+os.environ.setdefault("WINBOOTFIX_SHARE", "@SHAREDIR@")
+
+from winbootfix.cli import main  # noqa: E402
+
+sys.exit(main())

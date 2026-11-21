@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "winbootfix DLL -> software database",
+  "type": "object",
+  "required": ["dlls"],
+  "properties": {
+    "_comment": {"type": "string"},
+    "dlls": {
+      "type": "object",
+      "patternProperties": {
+        "^[a-z0-9_.+-]+\\.dll$": {
+          "type": "object",
+          "required": ["software"],
+          "properties": {
+            "software": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+            "note": {"type": "string"}
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

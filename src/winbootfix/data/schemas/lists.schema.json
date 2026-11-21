@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "winbootfix file lists (pe_allowlist.json, critical_files.json)",
+  "type": "object",
+  "properties": {
+    "_comment": {"type": "string"},
+    "files": {"type": "array", "items": {"type": "string"}},
+    "system32": {"type": "array", "items": {"type": "string", "pattern": "^[a-z0-9_.+-]+$"}},
+    "syswow64": {"type": "array", "items": {"type": "string", "pattern": "^[a-z0-9_.+-]+$"}}
+  },
+  "additionalProperties": false
+}

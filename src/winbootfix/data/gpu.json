@@ -1,0 +1,45 @@
+{
+  "_comment": "Graphics vendors and driver services. Keys of 'vendors' are PCI vendor IDs (lowercase hex). Keys of 'services' are Windows service names (lowercase). 'start' is the normal Start value (3 = on demand).",
+  "vendors": {
+    "10de": {
+      "name": "NVIDIA",
+      "driver_page": "https://www.nvidia.com/Download/index.aspx",
+      "installer_url": null,
+      "signer": "NVIDIA Corporation",
+      "clean_install_hint": "post.gpu.clean_hint_nvidia"
+    },
+    "1002": {
+      "name": "AMD",
+      "driver_page": "https://www.amd.com/en/support/download/drivers.html",
+      "installer_url": null,
+      "signer": "Advanced Micro Devices",
+      "clean_install_hint": "post.gpu.clean_hint_amd"
+    },
+    "8086": {
+      "name": "Intel",
+      "driver_page": "https://www.intel.com/content/www/us/en/support/detect.html",
+      "installer_url": null,
+      "signer": "Intel Corporation",
+      "clean_install_hint": "post.gpu.clean_hint_intel"
+    }
+  },
+  "services": {
+    "nvlddmkm": {"vendor": "10de", "start": 3},
+    "amdkmdag": {"vendor": "1002", "start": 3},
+    "amdwddmg": {"vendor": "1002", "start": 3},
+    "igfx": {"vendor": "8086", "start": 3},
+    "igfxn": {"vendor": "8086", "start": 3}
+  },
+  "oem_support": {
+    "dell": "https://www.dell.com/support/home/",
+    "hp": "https://support.hp.com/drivers",
+    "lenovo": "https://pcsupport.lenovo.com/",
+    "acer": "https://www.acer.com/support",
+    "asus": "https://www.asus.com/support/",
+    "msi": "https://www.msi.com/support",
+    "microsoft": "https://support.microsoft.com/surface",
+    "samsung": "https://www.samsung.com/support/",
+    "toshiba": "https://support.dynabook.com/"
+  },
+  "ddu_page": "https://www.wagnardsoft.com/"
+}

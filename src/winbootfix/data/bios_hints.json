@@ -1,0 +1,93 @@
+{
+  "_comment": "Usual firmware (BIOS/UEFI) menu paths per manufacturer. Menu names are kept in English because almost every firmware shows them in English. Keys: setup_key, boot_menu_key, ahci, secureboot, csm. Firmware versions differ: these are hints, not guarantees.",
+  "vendors": {
+    "generic": {
+      "name": "your PC",
+      "setup_key": "Del, F2, F10 or Esc",
+      "boot_menu_key": "F8, F11, F12 or Esc",
+      "ahci": "look for 'SATA Mode', 'SATA Operation', 'Storage Controller', 'Intel RST' or 'VMD' and choose 'AHCI' (or disable 'VMD Controller')",
+      "secureboot": "Boot or Security > Secure Boot",
+      "csm": "Boot > CSM / Legacy Support: Disabled (UEFI only)"
+    },
+    "asus": {
+      "name": "ASUS",
+      "setup_key": "Del or F2",
+      "boot_menu_key": "F8 (desktop) or Esc (laptop)",
+      "ahci": "Advanced > PCH Storage Configuration > SATA Mode Selection: AHCI; Advanced > VMD setup menu > Enable VMD controller: Disabled",
+      "secureboot": "Boot > Secure Boot > OS Type / Key Management",
+      "csm": "Boot > CSM (Compatibility Support Module) > Launch CSM: Disabled"
+    },
+    "msi": {
+      "name": "MSI",
+      "setup_key": "Del",
+      "boot_menu_key": "F11",
+      "ahci": "Settings > Advanced > Integrated Peripherals > SATA Mode: AHCI; Settings > Advanced > Intel VMD technology: Disabled",
+      "secureboot": "Settings > Advanced > Windows OS Configuration > Secure Boot",
+      "csm": "Settings > Advanced > Windows OS Configuration > BIOS UEFI/CSM Mode: UEFI"
+    },
+    "gigabyte": {
+      "name": "Gigabyte / AORUS",
+      "setup_key": "Del",
+      "boot_menu_key": "F12",
+      "ahci": "Settings > IO Ports > SATA and RST Configuration > SATA Mode Selection: AHCI; Intel VMD Technology: Disabled",
+      "secureboot": "Boot > Secure Boot",
+      "csm": "Boot > CSM Support: Disabled"
+    },
+    "asrock": {
+      "name": "ASRock",
+      "setup_key": "F2 or Del",
+      "boot_menu_key": "F11",
+      "ahci": "Advanced > Storage Configuration > SATA Mode: AHCI; VMD Configuration > Enable VMD controller: Disabled",
+      "secureboot": "Security > Secure Boot",
+      "csm": "Boot > CSM (Compatibility Support Module): Disabled"
+    },
+    "dell": {
+      "name": "Dell",
+      "setup_key": "F2",
+      "boot_menu_key": "F12",
+      "ahci": "Storage > SATA/NVMe Operation (or System Configuration > SATA Operation): AHCI/NVMe instead of 'RAID On'",
+      "secureboot": "Boot Configuration (or Secure Boot) > Enable Secure Boot",
+      "csm": "Boot Configuration > Enable Legacy Option ROMs: Off / Boot List Option: UEFI"
+    },
+    "hp": {
+      "name": "HP",
+      "setup_key": "F10 (Esc shows the startup menu)",
+      "boot_menu_key": "F9",
+      "ahci": "Advanced > System Options > Configure Storage Controller for Intel Optane / VMD: unchecked (or Storage > SATA Emulation: AHCI)",
+      "secureboot": "Advanced (or Security) > Secure Boot Configuration",
+      "csm": "Secure Boot Configuration > Legacy Support: Disabled"
+    },
+    "lenovo": {
+      "name": "Lenovo",
+      "setup_key": "F2 or F1 (ThinkPad/ThinkCentre), or the Novo button",
+      "boot_menu_key": "F12",
+      "ahci": "Configuration > Storage (or SATA Controller Mode): AHCI instead of 'Intel RST Premium' / disable 'VMD Controller'",
+      "secureboot": "Security > Secure Boot",
+      "csm": "Startup (or Boot) > UEFI/Legacy Boot: UEFI Only, CSM Support: No"
+    },
+    "acer": {
+      "name": "Acer",
+      "setup_key": "F2",
+      "boot_menu_key": "F12 (enable 'F12 Boot Menu' in Main first)",
+      "ahci": "Main > SATA Mode (or 'VMD Controller'): AHCI / Disabled. On some models press Ctrl+S on the Main tab to show the option",
+      "secureboot": "Boot > Secure Boot (a supervisor password must be set in Security first)",
+      "csm": "Boot > Boot Mode: UEFI"
+    },
+    "microsoft": {
+      "name": "Microsoft Surface",
+      "setup_key": "hold Volume Up, press Power",
+      "boot_menu_key": "hold Volume Down, press Power (boots from USB)",
+      "ahci": "not configurable on Surface devices",
+      "secureboot": "Security > Secure Boot (choose 'Microsoft & 3rd party CA' to start Linux USB sticks)",
+      "csm": "not available (UEFI only)"
+    },
+    "virtual": {
+      "name": "the virtual machine",
+      "setup_key": "Esc or F2 at the firmware logo",
+      "boot_menu_key": "Esc or F12",
+      "ahci": "change the virtual disk controller to SATA/AHCI or NVMe in the VM settings",
+      "secureboot": "VM settings > firmware / Secure Boot",
+      "csm": "VM settings > firmware type: UEFI"
+    }
+  }
+}

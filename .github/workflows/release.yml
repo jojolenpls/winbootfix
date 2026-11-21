@@ -1,0 +1,53 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check version
+        run: |
+          v=$(sed -n 's/^__version__ = "\(.*\)"/\1/p' src/winbootfix/__init__.py)
+          [ "v$v" = "$GITHUB_REF_NAME" ] || { echo "tag $GITHUB_REF_NAME does not match version $v"; exit 1; }
+      - name: Tests
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3-hivex python3-pytest dpkg-dev debhelper qemu-system-x86 ovmf socat
+          /usr/bin/python3 -m pytest -q tests/unit
+      - name: Source archive
+        run: |
+          mkdir -p dist
+          git archive --format=tar.gz --prefix=winbootfix/ -o dist/winbootfix-src.tar.gz HEAD
+          (cd dist && sha256sum winbootfix-src.tar.gz > winbootfix-src.tar.gz.sha256)
+      - name: Debian package
+        run: packaging/build-deb.sh
+      - name: Windows scripts archive
+        run: |
+          make windows-zip
+          (cd dist && sha256sum winbootfix-windows.zip > winbootfix-windows.zip.sha256)
+      - name: ISO
+        run: |
+          docker build -t winbootfix-iso iso
+          docker run --rm --privileged -v "$PWD:/src" winbootfix-iso
+          sudo chmod 666 /dev/kvm || true
+          TIMEOUT=1200 tests/iso/boot_smoke.sh dist/winbootfix-*-amd64.iso
+      - name: Publish
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: |
+            dist/winbootfix-*-amd64.iso
+            dist/winbootfix-*-amd64.iso.sha256
+            dist/winbootfix-*-amd64.packages
+            dist/winbootfix-src.tar.gz
+            dist/winbootfix-src.tar.gz.sha256
+            dist/winbootfix_*.deb
+            dist/winbootfix-windows.zip
+            dist/winbootfix-windows.zip.sha256

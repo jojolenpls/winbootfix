@@ -1,0 +1,105 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y shellcheck
+          pipx install ruff
+      - name: ruff
+        run: ruff check src tests
+      - name: shellcheck
+        run: |
+          shellcheck install.sh iso/build.sh iso/config/includes.chroot/usr/local/bin/winbootfix-menu \
+            iso/config/hooks/normal/*.hook.chroot tests/loop/make_image.sh tests/iso/boot_smoke.sh \
+            packaging/build-deb.sh
+          shellcheck -x tests/vm/*.sh tests/vm/scenarios/*.sh
+
+  unit:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3-hivex python3-pytest
+      - name: Unit tests
+        run: /usr/bin/python3 -m pytest -q tests/unit
+
+  loop:
+    # Real GPT disk images with FAT32 and NTFS (ntfs-3g) through loop devices.
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3-hivex python3-pytest gdisk dosfstools ntfs-3g efibootmgr fusefat
+      - name: Integration tests (root)
+        run: sudo /usr/bin/python3 -m pytest -q tests/loop
+
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: PSScriptAnalyzer
+        shell: pwsh
+        run: |
+          Install-Module PSScriptAnalyzer -Force -Scope CurrentUser
+          $issues = Invoke-ScriptAnalyzer -Path windows -Recurse -Severity Error
+          $issues | Format-Table -AutoSize
+          if ($issues) { exit 1 }
+      - name: Pester (Windows PowerShell 5.1)
+        shell: powershell
+        run: |
+          Install-Module Pester -MinimumVersion 5.5 -Force -SkipPublisherCheck -Scope CurrentUser
+          $r = Invoke-Pester tests/windows -PassThru -Output Detailed
+          if ($r.FailedCount -gt 0) { exit 1 }
+
+  deb:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y dpkg-dev debhelper
+      - run: packaging/build-deb.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: deb
+          path: dist/*.deb
+
+  iso:
+    runs-on: ubuntu-24.04
+    needs: [unit]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Build the ISO (Docker, Debian snapshot)
+        run: |
+          docker build -t winbootfix-iso iso
+          docker run --rm --privileged -v "$PWD:/src" winbootfix-iso
+      - name: Boot test (QEMU + OVMF, Secure Boot on)
+        run: |
+          sudo apt-get install -y qemu-system-x86 ovmf socat
+          sudo chmod 666 /dev/kvm || true
+          TIMEOUT=1200 tests/iso/boot_smoke.sh dist/winbootfix-*-amd64.iso dist/menu.png
+      - uses: actions/upload-artifact@v4
+        with:
+          name: iso
+          path: |
+            dist/*.iso
+            dist/*.sha256
+            dist/*.packages
+            dist/menu.png

@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "winbootfix BIOS menu hints",
+  "type": "object",
+  "required": ["vendors"],
+  "properties": {
+    "_comment": {"type": "string"},
+    "vendors": {
+      "type": "object",
+      "required": ["generic"],
+      "patternProperties": {
+        "^[a-z]+$": {
+          "type": "object",
+          "required": ["name", "setup_key", "boot_menu_key", "ahci", "secureboot", "csm"],
+          "properties": {
+            "name": {"type": "string"}, "setup_key": {"type": "string"}, "boot_menu_key": {"type": "string"},
+            "ahci": {"type": "string"}, "secureboot": {"type": "string"}, "csm": {"type": "string"}
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

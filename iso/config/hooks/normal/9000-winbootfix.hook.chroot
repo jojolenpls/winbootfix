@@ -1,0 +1,24 @@
+#!/bin/sh
+# Runs inside the image while it is built.
+set -e
+
+systemctl enable winbootfix-menu.service
+
+# Faster start of the tool
+python3 -m compileall -q /usr/lib/winbootfix || true
+
+# The rescue system needs storage, USB, filesystems and a basic framebuffer only:
+# drop big driver families (network, Wi-Fi, sound, GPU acceleration, cameras...).
+for kdir in /lib/modules/*; do
+    [ -d "$kdir/kernel" ] || continue
+    for sub in drivers/net/wireless drivers/net/ethernet drivers/bluetooth net/bluetooth net/wireless net/mac80211 \
+               sound drivers/media drivers/infiniband drivers/staging drivers/isdn \
+               drivers/gpu/drm/amd drivers/gpu/drm/nouveau drivers/gpu/drm/radeon drivers/gpu/drm/i915 \
+               drivers/gpu/drm/xe; do
+        rm -rf "$kdir/kernel/$sub"
+    done
+    depmod -a "$(basename "$kdir")"
+done
+update-initramfs -u -k all
+
+rm -rf /var/cache/apt/*.bin /var/lib/apt/lists/* /tmp/* || true
