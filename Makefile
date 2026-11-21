@@ -31,7 +31,7 @@ test-root:
 lint:
 	ruff check src tests
 	shellcheck install.sh iso/build.sh iso/config/includes.chroot/usr/local/bin/winbootfix-menu \
-		iso/config/hooks/normal/*.hook.chroot tests/loop/make_image.sh tests/iso/*.sh tests/vm/*.sh
+		iso/config/hooks/normal/*.hook.* tests/loop/make_image.sh tests/iso/*.sh tests/vm/*.sh
 
 iso:
 	iso/build.sh

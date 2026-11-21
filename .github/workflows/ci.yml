@@ -23,7 +23,7 @@ jobs:
       - name: shellcheck
         run: |
           shellcheck install.sh iso/build.sh iso/config/includes.chroot/usr/local/bin/winbootfix-menu \
-            iso/config/hooks/normal/*.hook.chroot tests/loop/make_image.sh tests/iso/boot_smoke.sh \
+            iso/config/hooks/normal/*.hook.* tests/loop/make_image.sh tests/iso/boot_smoke.sh \
             packaging/build-deb.sh
           shellcheck -x tests/vm/*.sh tests/vm/scenarios/*.sh
 
@@ -90,16 +90,25 @@ jobs:
         run: |
           docker build -t winbootfix-iso iso
           docker run --rm --privileged -v "$PWD:/src" winbootfix-iso
-      - name: Boot test (QEMU + OVMF, Secure Boot on)
+      - name: Inspect the ISO
         run: |
-          sudo apt-get install -y qemu-system-x86 ovmf socat
+          sudo apt-get install -y qemu-system-x86 ovmf socat xorriso
+          ls -lh dist
+          xorriso -indev dist/winbootfix-*-amd64.iso -find / -type f -name "*.efi" -o -name "*.cfg" -o -name "vmlinuz*" -o -name "*.squashfs" 2>/dev/null
+          xorriso -osirrox on -indev dist/winbootfix-*-amd64.iso -extract /boot/grub/grub.cfg /tmp/grub.cfg >/dev/null 2>&1 && head -60 /tmp/grub.cfg
+      - name: Boot test, live system (direct kernel boot)
+        run: |
           sudo chmod 666 /dev/kvm || true
-          TIMEOUT=1200 tests/iso/boot_smoke.sh dist/winbootfix-*-amd64.iso dist/menu.png
+          KERNEL_BOOT=1 TIMEOUT=600 FAIL_SHOT=dist/fail-kernel.png tests/iso/boot_smoke.sh dist/winbootfix-*-amd64.iso
+      - name: Boot test, full chain (OVMF Secure Boot, shim, GRUB)
+        run: TIMEOUT=900 FAIL_SHOT=dist/fail-secureboot.png tests/iso/boot_smoke.sh dist/winbootfix-*-amd64.iso dist/menu.png
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: iso
+          if-no-files-found: ignore
           path: |
             dist/*.iso
             dist/*.sha256
             dist/*.packages
-            dist/menu.png
+            dist/*.png

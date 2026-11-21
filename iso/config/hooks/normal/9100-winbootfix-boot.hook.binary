@@ -1,0 +1,24 @@
+#!/bin/sh
+# Runs in the binary/ tree before the ISO is written: start the live system automatically
+# after 5 seconds and mirror the GRUB / isolinux menus on the serial port (automated tests).
+set -e
+cfg=boot/grub/grub.cfg
+if [ -f "$cfg" ]; then
+    sed -i '/^set timeout=/d;/^set timeout_style=/d' "$cfg"
+    tmp=$(mktemp)
+    {
+        echo 'set timeout=5'
+        echo 'set timeout_style=menu'
+        echo 'serial --unit=0 --speed=115200'
+        echo 'terminal_input --append serial'
+        echo 'terminal_output --append serial'
+        cat "$cfg"
+    } > "$tmp"
+    cat "$tmp" > "$cfg"
+    rm -f "$tmp"
+fi
+for cfg in isolinux/isolinux.cfg isolinux/menu.cfg; do
+    [ -f "$cfg" ] || continue
+    sed -i 's/^timeout .*/timeout 50/' "$cfg"
+    grep -q '^timeout ' "$cfg" || echo 'timeout 50' >> "$cfg"
+done
