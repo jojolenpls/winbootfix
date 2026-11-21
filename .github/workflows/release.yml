@@ -36,6 +36,7 @@ jobs:
         run: |
           docker build -t winbootfix-iso iso
           docker run --rm --privileged -v "$PWD:/src" winbootfix-iso
+          sudo chown -R "$(id -u):$(id -g)" dist
           sudo chmod 666 /dev/kvm || true
           TIMEOUT=1200 tests/iso/boot_smoke.sh dist/winbootfix-*-amd64.iso
       - name: Publish
